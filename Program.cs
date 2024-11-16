@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using Azure.AI.OpenAI;
 using Azure.Identity;
+using OpenAI.Chat;
 
 Console.WriteLine("Hello, DevDayBE!");
 
@@ -8,6 +9,23 @@ Console.WriteLine("Hello, DevDayBE!");
 var tokenCredential = new ChainedTokenCredential(new ManagedIdentityCredential(), new AzureCliCredential());
 var client = new AzureOpenAIClient(new Uri("https://oai-demo-identity-swc.openai.azure.com/"), tokenCredential);
 
+#region Chat Completion
+// Make a Chat Completion request
+var chatClient = client.GetChatClient("gpt-35-turbo");
+var chatCompletion = (await chatClient.CompleteChatAsync(  
+    new ChatMessage[] {
+        new SystemChatMessage("You are an AI assistant that helps people find information."),
+        new UserChatMessage("What is the capital of Belgium?")
+    },
+    new ChatCompletionOptions() {
+        MaxOutputTokenCount = 800,
+        Temperature = (float)0.7
+    }
+)).Value;
+Console.WriteLine($"{chatCompletion.Role}: '{chatCompletion.Content[0].Text}'");  
+#endregion
+
+#region Image generation
 // Generate an image using the DALL-E model
 var generatedImageResult = await client.GetImageClient("dall-e-3").GenerateImageAsync("A giant belgian waffle in a beer glass shape, pixel art style");
 var image = generatedImageResult.Value;
@@ -22,3 +40,7 @@ Console.WriteLine($"Image saved to '{imageFileName}'");
 
 // Display the image using the default image viewer
 Process.Start(new ProcessStartInfo(imageFileName) { UseShellExecute = true });
+#endregion
+
+Console.WriteLine("Merci !");
+Console.ReadKey();

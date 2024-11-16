@@ -9,6 +9,7 @@ In this demo, I am using consuming an Azure OpenAI resource to generate images u
 - .NET 8.0 SDK
 - An Azure subscription with an Azure OpenAI resource created
 - Permission set to the Azure OpenAI resource (here I am using "Cognitive Services OpenAI User")
+- A GPT-3.5 turbo model deployed within this Azure OpenAI resource (this deployment is named "gpt-35-turbo" here in the code)
 - A "dall-e 3" model deployed within this Azure OpenAI resource (this deployment is named "dall-e-3" here in the code)
 
 ## Running the Project
